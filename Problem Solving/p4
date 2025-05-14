@@ -1,0 +1,20 @@
+/*
+Given an integer array nums, rotate the array to the right by k steps, where k is non-negative.
+*/
+
+
+
+
+
+class Solution {
+    public void rotate(int[] arr, int k) {
+        int n = arr.length;
+        int res[] = new int[n];
+        k = k % n;
+        int start[] = Arrays.copyOfRange(arr,n-k,n);
+        int end[] = Arrays.copyOfRange(arr,0,n-k);
+        System.arraycopy(start,0,res,0,start.length);
+        System.arraycopy(end,0,res,start.length, end.length);
+        
+    }
+}
