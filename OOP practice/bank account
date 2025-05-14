@@ -1,0 +1,80 @@
+import java.util.Scanner;
+
+class BankAccount {
+    private float balance = 0f;
+    float getBalance(){
+        return this.balance;
+    }
+    
+    void deposit(float amount){
+        this.balance += amount;
+    }
+    
+    void withdraw(float amount){
+        if(this.balance < amount)
+           System.out.println("Insufficient balance");
+        else{
+            this.balance -= amount;
+        }
+    }
+    
+}
+
+class CurrentAccount extends BankAccount {
+    static int freeTransactions = 3;
+    int transactionCount = 0;
+    static float transactionFee = 20f;
+    
+    float deductFee(){
+        return (this.transactionFee * (this.transactionCount - this.freeTransactions));
+    }
+    void withdraw(float amount){
+        this.transactionCount++;
+        if(this.transactionCount < freeTransactions){
+            super.withdraw(amount);
+        }
+        else{
+            float fee = this.deductFee();
+            amount += fee;
+            // System.out.println("fee :" + fee);
+            super.withdraw(amount);
+            
+        }
+    }
+    
+    
+     void deposit(float amount){
+        this.transactionCount++;
+        if(this.transactionCount < freeTransactions){
+            super.deposit(amount);
+        }
+        else{
+            float fee = this.deductFee();
+            amount -= fee;
+            // System.out.println("fee :" + fee);
+            super.deposit(amount);
+            
+        }
+    }
+
+    
+    
+}
+
+class Action {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        CurrentAccount account1 = new CurrentAccount();
+        System.out.println(account1.getBalance()); // Should print the current account balance => 0.0
+        account1.deposit(input.nextInt()); // Amount (1000) should be deposited in account 1
+        System.out.println(account1.getBalance()); // Should print the current account balance => 1000.0
+        account1.withdraw(input.nextInt()); // Amount (500) should be withdrawn from account 1
+        System.out.println(account1.getBalance()); // Should print the current account balance => 500.0
+        account1.deposit(input.nextInt()); // Amount (2000) should be deposited in account 1
+        System.out.println(account1.getBalance()); // Should print the current account balance => 2500.0
+        account1.withdraw(input.nextInt()); // Along with amount (1000) withdrawn additional fees will be deducted
+        System.out.println(account1.getBalance()); // Should print the current account balance => 1480.0
+        account1.withdraw(input.nextInt()); // Along with amount (1000) withdrawn additional fees will be deducted
+        System.out.println(account1.getBalance()); // Should print the current account balance => 440.0
+    }
+}
